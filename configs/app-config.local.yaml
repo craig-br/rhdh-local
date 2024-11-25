@@ -3,16 +3,27 @@ auth:
   providers:
     guest:
       dangerouslyAllowOutsideDevelopment: true
-    # github:
-    #   development:
-    #     clientId: ${AUTH_GITHUB_CLIENT_ID}
-    #     clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
-
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}
 # integrations:
 #   github:
 #     - host: github.com
 #       apps:
 #         - $include: github-app-credentials.yaml
+permission:
+  enabled: true
+  rbac:
+    admin:
+      superUsers:
+        - name: user:default/craig-br
+      users:
+        - name: user:default/craig-br
 
 app:
   title: RHDH
@@ -22,20 +33,16 @@ backend:
   listen:
     port: 7007
   baseUrl: ${BASE_URL}
-  # uncomment this if backend.baseUrl is exposed over HTTPS
-  # and you want RHDH to auto-generate and serve a self-signed certificate.
-  # https: true
+  https: true
   cors:
     origin: ${BASE_URL}
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
-  csp:
-   upgrade-insecure-requests: false
 
 # comment out the following 'database' section to use the PostgreSQL database
-  database:
-    client: better-sqlite3
-    connection: ':memory:'
+  # database:
+  #   client: better-sqlite3
+  #   connection: ':memory:'
 
   auth:
     keys:
@@ -43,8 +50,8 @@ backend:
 
 # You can use local files from catalog-entities directory to load entities into the catalog
 catalog:
-
   rules:
+    # - allow: [Template]
     - allow: [Component, API, Location, Template, Domain, User, Group, System, Resource]
 
   locations:
@@ -60,11 +67,37 @@ catalog:
     #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
     #   rules:
     #     - allow: [Component, User, Group, Domain]
-
-
+    - type: url
+      target: https://github.com/ansible/ansible-rhdh-templates/blob/main/all.yaml
+      rules:
+        - allow: [Template]
+  providers:
+    github:
+      organization: ${GITHUB_ORG}
+      schedule:
+        frequency: { minutes: 5 }
+        timeout: { minutes: 55 }
+        initialDelay: { seconds: 15 }
+    githubOrg:
+      id: development
+      githubUrl: https://github.com
+      orgs: [ '${GITHUB_ORG}' ]
+      schedule:
+        frequency: { minutes: 5 }
+        timeout: { minutes: 55 }
+        initialDelay: { seconds: 15 }
 techdocs:
   generator:
     runIn: local
   builder: local
   publisher: 
     type: local
+
+ansible:
+  creatorService:
+    baseUrl: 127.0.0.1
+    port: '8000'
+  rhaap:
+    baseUrl: 'https://controller.acme.demoredhat.com'
+    token: '${AAP24_CONTROLLER_TOKEN}'
+    checkSSL: true

@@ -1,6 +1,61 @@
 includes:
   - dynamic-plugins.default.yaml
-plugins: []
+plugins:
+  - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
+    disabled: true
+  - package: ./dynamic-plugins/dist/backstage-plugin-techdocs
+    disabled: true
+  - disabled: false
+    integrity: >-
+      sha512-vjlQ9hLDdHwY67E6S3gDQgXBsB/yO5GNuZQltFVxHKY1BGlwGvgSAhoejyN6mgpydGgJlXtM0hFL0vJ9pb6UCQ==
+    package: '/opt/app-root/src/local-plugins/ansible-plugin-backstage-rhaap-1.1.0.tgz'
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          ansible.plugin-backstage-rhaap:
+            appIcons:
+              - importName: AnsibleLogo
+                name: AnsibleLogo
+            dynamicRoutes:
+              - importName: AnsiblePage
+                menuItem:
+                  icon: AnsibleLogo
+                  text: Ansible
+                path: /ansible
+  - disabled: false
+    integrity: >-
+      sha512-ndd3uILlkvZ+jrpNsnYjmwkQY/e71EcCYqjnAsAF3CeZ3aZG/FYgvHFQ5OR9sNQHTaQ+ZjCietH9403xHSNZxQ==
+    package: >-
+      /opt/app-root/src/local-plugins/ansible-plugin-scaffolder-backend-module-backstage-rhaap-1.1.0.tgz
+    pluginConfig:
+      dynamicPlugins:
+        backend:
+          ansible.plugin-scaffolder-backend-module-backstage-rhaap: null
+  - disabled: false
+    integrity: >-
+      sha512-EaBuyPWVpfsSpuWLYPZzIol3CxTqP39dabQmzDZgoVuyFgq8UA4kXyhyyZLNm0B5C+u0Sa/sksKdhqRi/tDLaw==
+    package: >-
+      /opt/app-root/src/local-plugins/ansible-plugin-backstage-rhaap-backend-1.1.0.tgz
+    pluginConfig:
+      dynamicPlugins:
+        backend:
+          ansible.plugin-backstage-rhaap-backend: null
+  - disabled: false
+    package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
+  # - disabled: false
+  #   package: >-
+  #     ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
+  # - disabled: false
+  #   package: >-
+  #     ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
+  # - disabled: false
+  #   package: >-
+  #     ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org
+  - disabled: false
+    package: ./dynamic-plugins/dist/backstage-plugin-github-actions
+  # - disabled: false
+  #   package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github
+
 
   # EXAMPLES:
   # loading plugin from host directory
